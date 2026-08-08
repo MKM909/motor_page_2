@@ -1,150 +1,512 @@
-.page {
-  --background: #fafafa;
-  --foreground: #fff;
-
-  --text-primary: #000;
-  --text-secondary: #666;
-
-  --button-primary-hover: #383838;
-  --button-secondary-hover: #f2f2f2;
-  --button-secondary-border: #ebebeb;
-
+.container {
+  position: relative;
+  width: 100vw;
+  min-height: 100vh;
+  background-color: #b8733e;
+  overflow-x: hidden;
   display: flex;
-  flex: 1;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-geist-sans);
-  background-color: var(--background);
 }
 
-.main {
-  display: flex;
-  flex: 1;
+.heroSection {
+  position: relative;
   width: 100%;
-  max-width: 800px;
+  height: 100vh;
+  min-height: 650px;
+  overflow: hidden;
+  display: flex;
   flex-direction: column;
-  align-items: flex-start;
   justify-content: space-between;
-  background-color: var(--foreground);
-  padding: 120px 60px;
 }
 
-.intro {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
-  gap: 24px;
-}
-
-.intro h1 {
-  max-width: 320px;
-  font-size: 40px;
-  font-weight: 600;
-  line-height: 48px;
-  letter-spacing: -2.4px;
-  text-wrap: balance;
-  color: var(--text-primary);
-}
-
-.intro p {
-  max-width: 440px;
-  font-size: 18px;
-  line-height: 32px;
-  text-wrap: balance;
-  color: var(--text-secondary);
-}
-
-.intro a {
-  font-weight: 500;
-  color: var(--text-primary);
-}
-
-.ctas {
-  display: flex;
-  flex-direction: row;
+/* Desert Background Layer */
+.bgImageLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
   width: 100%;
-  max-width: 440px;
-  gap: 16px;
-  font-size: 14px;
+  height: 100%;
 }
 
-.ctas a {
+.bgImage {
+  object-fit: cover;
+  object-position: center 60%;
+  width: 100%;
+  height: 100%;
+  filter: brightness(0.96) contrast(1.02);
+  transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Vignette overlay for subtle cinematic contrast */
+.vignetteOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: radial-gradient(
+    circle at center,
+    rgba(0, 0, 0, 0) 50%,
+    rgba(0, 0, 0, 0.25) 100%
+  );
+  pointer-events: none;
+}
+
+/* Smooth desert gradient transition mask at bottom of hero */
+.sandTransitionOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 180px;
+  background: linear-gradient(
+    to bottom,
+    rgba(184, 115, 62, 0) 0%,
+    rgba(184, 115, 62, 0.6) 40%,
+    #b8733e 100%
+  );
+  z-index: 12;
+  pointer-events: none;
+}
+
+/* Header Navbar */
+.header {
+  position: relative;
+  z-index: 20;
+  width: 100%;
+  padding: 1.3rem 3rem 1rem 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@media (max-width: 1024px) {
+  .header {
+    padding: 1.2rem 2rem 0.8rem 2rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .header {
+    padding: 1rem 1.25rem 0.5rem 1.25rem;
+  }
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+}
+
+.logoCircle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+}
+
+.logoCircle:hover {
+  border-color: #ffffff;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 3.5rem;
+  list-style: none;
+}
+
+@media (max-width: 900px) {
+  .navLinks {
+    display: none;
+  }
+}
+
+.navItem {
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.navItem:hover {
+  color: #ffffff;
+}
+
+/* Nav Item Hover State: Line expands and retracts outwards from center */
+.navItem::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0%;
+  height: 1.5px;
+  background-color: #ffffff;
+  transition: width 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.navItem:hover::after,
+.navItemActive::after {
+  width: 100%;
+}
+
+.supScript {
+  font-size: 0.65rem;
+  vertical-align: super;
+  margin-left: 2px;
+  opacity: 0.8;
+}
+
+.mobileMenuBtn {
+  display: none;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+@media (max-width: 900px) {
+  .mobileMenuBtn {
+    display: block;
+  }
+}
+
+/* Background Large "Mercedes-Benz" Title Layer */
+.titleContainer {
+  position: absolute;
+  top: 18%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 6;
+  text-align: center;
+  width: 100%;
+  pointer-events: auto;
+  padding: 0 2rem;
+}
+
+.heroTitle {
+  font-family: var(--font-serif-family);
+  font-size: clamp(6.2rem, 15.5vw, 17.5rem);
+  font-weight: 400;
+  color: rgba(28, 59, 78, 0.85);
+  letter-spacing: -0.02em;
+  line-height: 0.82;
+  white-space: nowrap;
+  user-select: none;
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.12);
+  transition: transform 0.15s ease-out;
+}
+
+@media (max-width: 768px) {
+  .titleContainer {
+    top: 21%;
+  }
+}
+
+/* Foreground Car Container - Fullscreen size & windowed breathing room size */
+.carContainer {
+  position: absolute;
+  bottom: 6%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  width: clamp(340px, 47vw, 630px);
   display: flex;
   justify-content: center;
-  align-items: center;
-  height: 40px;
-  padding: 0 16px;
-  border-radius: 128px;
-  border: 1px solid transparent;
-  transition: 0.2s;
-  cursor: pointer;
-  width: fit-content;
+  align-items: flex-end;
+  pointer-events: auto;
+  transition: transform 0.15s ease-out, width 0.3s ease;
+}
+
+/* In non-fullscreen / reduced window height, scale down slightly for breathing room */
+@media (max-height: 820px) {
+  .carContainer {
+    width: clamp(310px, 42vw, 540px);
+    bottom: 5%;
+  }
+}
+
+@media (max-height: 700px) {
+  .carContainer {
+    width: clamp(280px, 38vw, 480px);
+    bottom: 4.5%;
+  }
+}
+
+/* Soft mask gradient on car image to eliminate hard shadow box line at bottom */
+.carImage {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 84%, rgba(0, 0, 0, 0) 96%);
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 84%, rgba(0, 0, 0, 0) 96%);
+  filter: drop-shadow(0 12px 14px rgba(0, 0, 0, 0.35));
+}
+
+/* Ground Sand Soft Radial Shadows beneath tires */
+.groundSandShadow {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 92%;
+  height: 24px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(35, 18, 8, 0.65) 0%,
+    rgba(45, 24, 10, 0.35) 45%,
+    rgba(0, 0, 0, 0) 75%
+  );
+  filter: blur(4px);
+  z-index: 9;
+  pointer-events: none;
+}
+
+/* Left overlay specs */
+.leftSpecsContainer {
+  position: relative;
+  z-index: 15;
+  margin-left: 3rem;
+  margin-bottom: 5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.2rem;
+  max-width: 280px;
+}
+
+@media (max-width: 1024px) {
+  .leftSpecsContainer {
+    margin-left: 2rem;
+    margin-bottom: 4rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .leftSpecsContainer {
+    margin-left: 1.25rem;
+    margin-bottom: 3rem;
+    gap: 1.5rem;
+  }
+}
+
+.specBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.specHeader {
+  font-family: var(--font-serif-family);
+  font-size: 1.65rem;
   font-weight: 500;
+  color: #ffffff;
+  letter-spacing: 0.02em;
+  padding-bottom: 0.35rem;
+  position: relative;
+  display: inline-block;
+  width: max-content;
 }
 
-a.primary {
-  background: var(--text-primary);
-  color: var(--background);
-  gap: 8px;
+.specHeader::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.85);
 }
 
-a.secondary {
-  border-color: var(--button-secondary-border);
+.specValuePrimary {
+  font-size: 0.95rem;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: 0.02em;
+  margin-top: 0.25rem;
 }
 
-/* Enable hover only on non-touch devices */
-@media (hover: hover) and (pointer: fine) {
-  a.primary:hover {
-    background: var(--button-primary-hover);
-    border-color: transparent;
-  }
-
-  a.secondary:hover {
-    background: var(--button-secondary-hover);
-    border-color: transparent;
-  }
+.specValueSecondary {
+  font-size: 0.95rem;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.8);
+  letter-spacing: 0.01em;
 }
 
-@media (max-width: 600px) {
-  .main {
-    padding: 48px 24px;
-  }
-
-  .intro {
-    gap: 16px;
-  }
-
-  .intro h1 {
-    font-size: 32px;
-    line-height: 40px;
-    letter-spacing: -1.92px;
-  }
+/* Right overlay action box */
+.rightActionContainer {
+  position: relative;
+  z-index: 15;
+  margin-right: 3rem;
+  margin-bottom: 5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1.5rem;
+  max-width: 320px;
+  text-align: right;
 }
 
-@media (prefers-color-scheme: dark) {
-  .logo {
-    filter: invert();
-  }
-
-  .page {
-    --background: #000;
-    --foreground: #000;
-
-    --text-primary: #ededed;
-    --text-secondary: #999;
-
-    --button-primary-hover: #ccc;
-    --button-secondary-hover: #1a1a1a;
-    --button-secondary-border: #1a1a1a;
+@media (max-width: 1024px) {
+  .rightActionContainer {
+    margin-right: 2rem;
+    margin-bottom: 4rem;
   }
 }
 
-.code {
-  font-family: var(--font-geist-mono);
-  font-size: 0.9em;
-  background: color-mix(in srgb, currentColor 8%, transparent);
-  padding: 0.1em 0.4em;
-  border-radius: 6px;
+@media (max-width: 768px) {
+  .rightActionContainer {
+    margin-right: 1.25rem;
+    margin-bottom: 3rem;
+    max-width: 240px;
+  }
+}
+
+.exploreBtn {
+  background-color: #ffffff;
+  color: #0f172a;
+  font-family: var(--font-sans-family);
+  font-weight: 600;
+  font-size: 0.92rem;
+  padding: 0.85rem 2.2rem;
+  border-radius: 2px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  letter-spacing: 0.03em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.exploreBtn:hover {
+  background-color: #f1f5f9;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.25);
+}
+
+.exploreBtn:active {
+  transform: translateY(0);
+}
+
+.actionDescription {
+  font-size: 0.92rem;
+  font-weight: 300;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: 0.01em;
+}
+
+/* Bottom Bar Wrapper (Left + Right specs) */
+.heroBottomControls {
+  position: relative;
+  z-index: 15;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+/* Desert Sand Continued Lower Section */
+.detailsSection {
+  background-color: #b8733e;
+  padding: 5rem 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+}
+
+@media (max-width: 768px) {
+  .detailsSection {
+    padding: 3rem 1.5rem;
+    gap: 2.5rem;
+  }
+}
+
+.sectionTagline {
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 0.85rem;
+  color: rgba(28, 15, 7, 0.7);
+  font-weight: 600;
+}
+
+.sectionHeading {
+  font-family: var(--font-serif-family);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 500;
+  color: #1a0e07;
+  letter-spacing: 0.01em;
+  margin-top: 0.3rem;
+}
+
+.featuresGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.featureCard {
+  background: rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 12px;
+  padding: 2.2rem;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 10px 30px rgba(60, 25, 5, 0.08);
+}
+
+.featureCard:hover {
+  background: rgba(255, 255, 255, 0.32);
+  border-color: rgba(255, 255, 255, 0.55);
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(60, 25, 5, 0.14);
+}
+
+.featureNum {
+  font-family: var(--font-serif-family);
+  font-size: 1.3rem;
+  color: rgba(28, 15, 7, 0.55);
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.featureTitle {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #1a0e07;
+  margin-bottom: 0.75rem;
+}
+
+.featureDesc {
+  font-size: 0.95rem;
+  color: rgba(28, 15, 7, 0.85);
+  line-height: 1.6;
+}
+
+/* Footer Section */
+.footerContainer {
+  background-color: #aa6533;
+  padding: 3rem 3rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  color: rgba(28, 15, 7, 0.85);
+  font-size: 0.9rem;
 }

@@ -586,7 +586,7 @@ export default function Home() {
           </h1>
         </div>
 
-        {/* ── Front Car Image Standing Tall at Bottom Center (Permanently pre-mounted images, zero re-loading) ── */}
+        {/* ── Front Car Image Standing Tall at Bottom Center (Slightly reduced size for optimal title clearance) ── */}
         <div
           onMouseEnter={() => {
             if (!window.matchMedia("(hover: none)").matches) {
@@ -600,11 +600,11 @@ export default function Home() {
             setIsCarHovered(false);
             handleSelectCar((carIndex + 1) % CARS.length);
           }}
-          className="car-container absolute left-1/2 z-10 bottom-[5%] max-md:bottom-[1.5%] flex justify-center items-end pointer-events-auto cursor-pointer max-md:w-full touch-manipulation h-[320px] sm:h-[400px] w-full max-w-[650px]"
+          className="car-container absolute left-1/2 z-10 bottom-[4%] max-md:bottom-[1.5%] flex justify-center items-end pointer-events-auto cursor-pointer max-md:w-full touch-manipulation h-[260px] sm:h-[340px] w-full max-w-[500px]"
           style={{ transform: "translateX(-50%)" }}
         >
           <div
-            className="absolute -bottom-[6px] left-1/2 -translate-x-1/2 w-[92%] h-6 z-[9] pointer-events-none blur-[4px]"
+            className="absolute -bottom-[6px] left-1/2 -translate-x-1/2 w-[90%] h-6 z-[9] pointer-events-none blur-[4px]"
             style={{ background: "radial-gradient(ellipse at center, rgba(35,18,8,0.65) 0%, rgba(45,24,10,0.35) 45%, rgba(0,0,0,0) 75%)" }}
           />
           {CARS.map((car, idx) => {
@@ -619,11 +619,11 @@ export default function Home() {
                 <Image
                   src={car.image}
                   alt={car.name}
-                  width={650}
-                  height={430}
+                  width={520}
+                  height={340}
                   priority
                   quality={90}
-                  className="car-image transition-transform duration-300 ease-out hover:scale-[1.02] max-md:w-[70%] max-md:h-auto object-contain"
+                  className="car-image transition-transform duration-300 ease-out hover:scale-[1.02] max-w-[480px] w-auto h-auto max-md:w-[62%] max-md:max-w-[310px] object-contain"
                   style={{ transform: `translate(${mousePos.x * 10}px, ${mousePos.y * 8}px)` }}
                 />
               </div>

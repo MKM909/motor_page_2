@@ -293,6 +293,42 @@ export default function Home() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Scroll spy useEffect: sync activeTab with real-time viewport section position
+  useEffect(() => {
+    const sectionMap = [
+      { id: "cars", name: "CARS" },
+      { id: "about", name: "ABOUT" },
+      { id: "shop", name: "SHOP" },
+      { id: "media", name: "MEDIA" },
+      { id: "news", name: "NEWS" },
+      { id: "contact", name: "CONTACT" },
+    ];
+
+    const handleIntersect: IntersectionObserverCallback = (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const match = sectionMap.find((s) => s.id === entry.target.id);
+          if (match) {
+            setActiveTab(match.name);
+          }
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(handleIntersect, {
+      root: null,
+      rootMargin: "-25% 0px -40% 0px",
+      threshold: 0.1,
+    });
+
+    sectionMap.forEach((s) => {
+      const el = document.getElementById(s.id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.style.overflow = "hidden";
@@ -338,7 +374,7 @@ export default function Home() {
 
   return (
     <div className="relative w-screen min-h-screen bg-[#b8733e] overflow-x-hidden flex flex-col">
-      <section className="relative w-full h-[100dvh] min-h-[600px] max-md:min-h-0 overflow-hidden flex flex-col justify-between">
+      <section id="cars" className="relative w-full h-[100dvh] min-h-[600px] max-md:min-h-0 overflow-hidden flex flex-col justify-between">
         <div className="absolute inset-0 z-[1] w-full h-full bg-[#162e42]">
           {/* Background image filling backdrop naturally without hard offsets */}
           <div className="relative w-full h-full">
@@ -550,9 +586,8 @@ export default function Home() {
           </h1>
         </div>
 
-        {/* ── Front Car Image Standing Tall at Bottom Center (Reduced size on mobile, sitting below text) ── */}
+        {/* ── Front Car Image Standing Tall at Bottom Center (Permanently pre-mounted images, zero re-loading) ── */}
         <div
-          key={`car-${switchKey}`}
           onMouseEnter={() => {
             if (!window.matchMedia("(hover: none)").matches) {
               setIsCarHovered(true);
@@ -565,23 +600,35 @@ export default function Home() {
             setIsCarHovered(false);
             handleSelectCar((carIndex + 1) % CARS.length);
           }}
-          className="car-container apple-car-switch absolute left-1/2 z-10 bottom-[5%] max-md:bottom-[1.5%] flex justify-center items-end pointer-events-auto cursor-pointer max-md:w-full touch-manipulation"
+          className="car-container absolute left-1/2 z-10 bottom-[5%] max-md:bottom-[1.5%] flex justify-center items-end pointer-events-auto cursor-pointer max-md:w-full touch-manipulation h-[320px] sm:h-[400px] w-full max-w-[650px]"
           style={{ transform: "translateX(-50%)" }}
         >
           <div
             className="absolute -bottom-[6px] left-1/2 -translate-x-1/2 w-[92%] h-6 z-[9] pointer-events-none blur-[4px]"
             style={{ background: "radial-gradient(ellipse at center, rgba(35,18,8,0.65) 0%, rgba(45,24,10,0.35) 45%, rgba(0,0,0,0) 75%)" }}
           />
-          <Image
-            src={activeCar.image}
-            alt={activeCar.name}
-            width={650}
-            height={430}
-            priority
-            quality={100}
-            className="car-image transition-transform duration-300 ease-out hover:scale-[1.02] max-md:w-[70%] max-md:h-auto"
-            style={{ transform: `translate(${mousePos.x * 10}px, ${mousePos.y * 8}px)` }}
-          />
+          {CARS.map((car, idx) => {
+            const isActive = idx === carIndex;
+            return (
+              <div
+                key={car.id}
+                className={`absolute inset-0 flex items-end justify-center transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                  isActive ? "opacity-100 scale-100 z-10 pointer-events-auto" : "opacity-0 scale-95 z-0 pointer-events-none"
+                }`}
+              >
+                <Image
+                  src={car.image}
+                  alt={car.name}
+                  width={650}
+                  height={430}
+                  priority
+                  quality={90}
+                  className="car-image transition-transform duration-300 ease-out hover:scale-[1.02] max-md:w-[70%] max-md:h-auto object-contain"
+                  style={{ transform: `translate(${mousePos.x * 10}px, ${mousePos.y * 8}px)` }}
+                />
+              </div>
+            );
+          })}
         </div>
 
         {/* ── DESKTOP HERO OVERLAY (Anchored at BOTTOM-0, hidden on mobile) ── */}
@@ -741,7 +788,7 @@ export default function Home() {
       </section>
 
       {/* ── Why Choose Us Section (Equal Height Panels, Scroll-driven Truck Motion) ── */}
-      <section ref={sectionRef} id="features" className="bg-[#b8733e] px-12 py-24 max-lg:px-8 max-md:px-6 max-md:pt-8 max-md:pb-0 overflow-hidden">
+      <section ref={sectionRef} id="about" className="bg-[#b8733e] px-12 py-24 max-lg:px-8 max-md:px-6 max-md:pt-8 max-md:pb-0 overflow-hidden">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start lg:items-stretch">
           
           {/* Left Column: Heading & Sideways Truck Image (Scroll-driven Drive-in / Reverse) */}
@@ -1078,7 +1125,7 @@ export default function Home() {
       </section>
 
       {/* ── Services / Quick Actions Section (5 Compact Bento Tiles, Edge-to-Edge Dividers) ── */}
-      <section className="w-full bg-[#b8733e] p-0 m-0 border-b border-white/40 overflow-hidden">
+      <section id="media" className="w-full bg-[#b8733e] p-0 m-0 border-b border-white/40 overflow-hidden">
         <div className="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
           {QUICK_ACTIONS.map((action, idx) => {
             const isLastColLg = idx === 4;
